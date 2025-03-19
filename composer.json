@@ -1,0 +1,8 @@
+{
+  "name": "user/photo_script_test",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/app"
+    }
+  }
+}

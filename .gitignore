@@ -1,1 +1,4 @@
 .idea
+/vendor/
+src/logs
+src/public/download
