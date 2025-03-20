@@ -10,26 +10,27 @@ class NetworkClient
 {
     private int $timeout = 10;
 
-    public function get(string $path, array $params = []): bool|string
+    public function get(string $path, array $params = []): array|int
     {
-        $logger = Logger::getLogger();
-
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logger) {
-            $logger->log($errno, $errstr, $errfile, $errline);
-        });
-
         try {
-            $response = file_get_contents($path);
+            $response = @file_get_contents($path);
 
-            return $response;
+            return ["file" => $response, "status" => $this->getRequestStatus($http_response_header)];
         } catch (DownloadException $e) {
-            var_dump($e->getMessage());
+            return $this->getRequestStatus($http_response_header);
         }
     }
 
     private function setTimeout(int $timeout): void
     {
         $this->timeout = $timeout;
+    }
+
+    private function getRequestStatus($http_response_header): int
+    {
+        preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
+        $responsecode = intval($matches[0]);
+        return $responsecode;
     }
 
 }
